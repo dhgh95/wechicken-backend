@@ -1,9 +1,10 @@
 import { Router } from 'express'
 import { UserController } from '../controllers'
+import { validateToken } from '../middlewares'
 
 const router = Router()
 
-// router.get('/:userId')
+router.get('/:userId', validateToken, UserController.getUser)
 // router.get('/:userId/followers')
 // router.get('/:userId/followees')
 // router.get('/:userId/blogs')

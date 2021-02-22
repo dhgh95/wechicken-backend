@@ -37,14 +37,25 @@ const logIn = errorWrapper(async (req: Request, res: Response) => {
   if (validationErrors.length) errorGenerator({ statusCode: 400, validationErrors })
 
   const { gmail }: userUniqueSearchInput = req.body
-  const foundUser = await UserService.findUser({ gmail })
+  const foundUser = await UserService.findMe({ gmail })
   if (!foundUser) errorGenerator({ statusCode: 400, message: '해당 유저 존재하지 않음' })
 
   const token = jwt.sign({ id: foundUser.id }, AUTH_TOKEN_SALT)
   res.status(200).json({ token })
 })
 
+const getUser = errorWrapper(async (req: Request, res: Response) => {
+  const { userId }: { userId?: string; } = req.params;
+  const isMe = userId === "me" || Number(userId) === req.foundUser.id;
+  const foundUser = isMe ? req.foundUser : await UserService.findUser({ id: Number(userId) });
+
+  res.status(200).json({
+    user: foundUser
+  })
+})
+
 export default {
   signUp,
   logIn,
+  getUser,
 }

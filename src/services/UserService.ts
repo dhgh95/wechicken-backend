@@ -18,16 +18,48 @@ const createUser = (data: createUserInput) => {
   })
 }
 
+const findMe = (data: userUniqueSearchInput) => {
+  const [uniqueKey] = Object.keys(data)
+
+  return prisma.users.findUnique({
+    where: { [uniqueKey]: data[uniqueKey] },
+    select: {
+      id: true,
+      name: true,
+      thumbnail: true,
+      blog_address: true,
+      gmail: true,
+      batch_id: true,
+      batches: {
+        select: {
+          batch_types: true
+        }
+      }
+    }
+  })
+}
+
 const findUser = (data: userUniqueSearchInput) => {
   const [uniqueKey] = Object.keys(data)
 
   return prisma.users.findUnique({
     where: { [uniqueKey]: data[uniqueKey] },
-    include: { batches: { include: { batch_types: true } } },
+    select: {
+      name: true,
+      thumbnail: true,
+      blog_address: true,
+      batch_id: true,
+      batches: {
+        select: {
+          batch_types: true
+        }
+      }
+    }
   })
 }
 
 export default {
   createUser,
+  findMe,
   findUser,
 }
