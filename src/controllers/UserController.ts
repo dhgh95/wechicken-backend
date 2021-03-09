@@ -54,8 +54,19 @@ const getUser = errorWrapper(async (req: Request, res: Response) => {
   })
 })
 
+const getUserBlogs = errorWrapper(async (req: Request, res: Response) => {
+  const { userId }: { userId?: string; } = req.params;
+  const id = userId === "me" ? req.foundUser.id : Number(userId);
+  const foundUserBlogs = await UserService.findUserBlogs({ id });
+
+  res.status(200).json({
+    user: foundUserBlogs
+  })
+})
+
 export default {
   signUp,
   logIn,
   getUser,
+  getUserBlogs
 }

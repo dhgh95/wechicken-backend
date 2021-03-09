@@ -7,7 +7,7 @@ const router = Router()
 router.get('/:userId', validateToken, UserController.getUser)
 // router.get('/:userId/followers')
 // router.get('/:userId/followees')
-// router.get('/:userId/blogs')
+router.get('/:userId/blogs', validateToken, UserController.getUserBlogs)
 
 // router.post('/login/google')
 // router.post('/:userId/follow')
